@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#4f8f7b" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="투두 메모" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>투두 메모</title>
+    <link rel="preload" href="fonts/PretendardVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icon.svg" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell">
+      <main class="screen">
+        <section id="todoView" class="tab-panel active" aria-label="투두">
+          <header class="banner" id="banner">
+            <div class="banner-content">
+              <button class="today-jump" id="todayJumpButton" type="button" aria-label="오늘로 이동">
+                <div class="banner-kicker">오늘</div>
+                <div class="banner-title" id="bannerDateShort"></div>
+              </button>
+              <div class="banner-stats" aria-label="투두 현황">
+                <span id="todoCountText">0개</span>
+                <span id="doneCountText">완료 0</span>
+              </div>
+            </div>
+            <button class="icon-button banner-menu-button" id="bannerMenuButton" type="button" aria-label="배너 설정">
+              <span></span><span></span><span></span>
+            </button>
+            <div class="popover banner-menu" id="bannerMenu" hidden>
+              <button type="button" id="useThemeBanner">기본 테마 배너 사용</button>
+              <button type="button" id="chooseBannerPhoto">내 사진 설정</button>
+            </div>
+            <input id="bannerFileInput" type="file" accept="image/*" hidden />
+          </header>
+
+          <section class="calendar">
+            <div class="calendar-top">
+              <button class="icon-button nav-button" id="previousPeriod" type="button" aria-label="이전">‹</button>
+              <div class="calendar-date" id="selectedDateText"></div>
+              <button class="mode-button" id="calendarModeButton" type="button"></button>
+              <button class="icon-button nav-button" id="nextPeriod" type="button" aria-label="다음">›</button>
+            </div>
+            <div class="weekday-row" id="weekdayRow"></div>
+            <div class="date-grid week-grid" id="dateGrid"></div>
+          </section>
+
+          <section class="todo-list-panel">
+            <form class="todo-input-row" id="todoForm">
+              <input id="todoInput" type="text" placeholder="할 일 입력" autocomplete="off" />
+              <button class="add-button" type="submit" aria-label="추가">+</button>
+            </form>
+            <div class="todo-list" id="todoList"></div>
+          </section>
+        </section>
+
+        <section id="memoView" class="tab-panel" aria-label="메모">
+          <header class="simple-top">
+            <h1>메모</h1>
+            <button class="text-danger-button" id="clearMemoButton" type="button">삭제</button>
+          </header>
+          <textarea id="memoText" class="memo-textarea" spellcheck="false" placeholder=""></textarea>
+        </section>
+
+        <section id="settingsView" class="tab-panel" aria-label="설정">
+          <header class="simple-top">
+            <h1>설정</h1>
+          </header>
+
+          <section class="setting-group">
+            <h2>테마</h2>
+            <div class="theme-grid" id="themeGrid"></div>
+          </section>
+
+          <section class="setting-group">
+            <h2>요일 시작</h2>
+            <div class="segmented" role="group" aria-label="요일 시작">
+              <button type="button" data-week-start="monday">월요일 시작</button>
+              <button type="button" data-week-start="sunday">일요일 시작</button>
+            </div>
+          </section>
+
+          <section class="setting-group">
+            <h2>완료 항목 위치</h2>
+            <div class="segmented" role="group" aria-label="완료 항목 위치">
+              <button type="button" data-complete-position="stay">완료해도 그대로 두기</button>
+              <button type="button" data-complete-position="bottom">완료하면 아래로 이동</button>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <nav class="bottom-tabs" aria-label="하단 메뉴">
+        <button class="tab-button active" type="button" data-tab="todoView">
+          <span class="tab-icon icon-todo" aria-hidden="true"></span>
+          <span>투두</span>
+        </button>
+        <button class="tab-button" type="button" data-tab="memoView">
+          <span class="tab-icon icon-memo" aria-hidden="true"></span>
+          <span>메모</span>
+        </button>
+        <button class="tab-button" type="button" data-tab="settingsView">
+          <span class="tab-icon icon-settings" aria-hidden="true"></span>
+          <span>설정</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="dialog-backdrop" id="confirmDialog" hidden>
+      <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+        <h2 id="confirmTitle">메모를 삭제할까요?</h2>
+        <p>삭제하면 저장된 메모 내용이 완전히 초기화됩니다.</p>
+        <div class="dialog-actions">
+          <button type="button" id="cancelMemoClear">취소</button>
+          <button class="danger-fill" type="button" id="confirmMemoClear">삭제</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="dialog-backdrop" id="editTodoDialog" hidden>
+      <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="editTodoTitle">
+        <h2 id="editTodoTitle">할 일 수정</h2>
+        <input id="editTodoInput" class="dialog-input" type="text" autocomplete="off" />
+        <div class="dialog-actions">
+          <button type="button" id="cancelTodoEdit">취소</button>
+          <button class="primary-fill" type="button" id="confirmTodoEdit">저장</button>
+        </div>
+      </section>
+    </div>
+
+    <template id="todoMenuTemplate">
+      <div class="popover todo-menu">
+        <button type="button" data-action="edit">수정</button>
+        <button type="button" data-action="delete">삭제</button>
+        <button type="button" data-action="cancel">취소</button>
+      </div>
+    </template>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

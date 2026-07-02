@@ -1,0 +1,19 @@
+{
+  "name": "투두 메모",
+  "short_name": "투두",
+  "description": "개인용 투두와 메모",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#f7f5ef",
+  "theme_color": "#4f8f7b",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
