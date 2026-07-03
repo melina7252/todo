@@ -98,8 +98,9 @@ textarea:focus-visible {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
+  z-index: 20;
   box-shadow: none;
 }
 
@@ -231,7 +232,7 @@ textarea:focus-visible {
 
 .popover {
   position: absolute;
-  z-index: 20;
+  z-index: 60;
   min-width: 190px;
   padding: 8px;
   border: 1px solid var(--line);
@@ -271,7 +272,7 @@ textarea:focus-visible {
   background: var(--surface-strong);
   box-shadow: none;
   position: relative;
-  z-index: 4;
+  z-index: 1;
 }
 
 .calendar-top {
