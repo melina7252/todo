@@ -30,6 +30,7 @@
 html,
 body {
   min-height: 100%;
+  touch-action: manipulation;
 }
 
 body {
@@ -44,6 +45,7 @@ button,
 input,
 textarea {
   font: inherit;
+  touch-action: manipulation;
 }
 
 button {
@@ -96,6 +98,8 @@ textarea:focus-visible {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   position: relative;
+  overflow: hidden;
+  isolation: isolate;
   box-shadow: none;
 }
 
@@ -105,6 +109,7 @@ textarea:focus-visible {
   inset: 0;
   background: rgba(0, 0, 0, 0);
   pointer-events: none;
+  z-index: 1;
 }
 
 .banner.has-photo::after {
@@ -405,6 +410,9 @@ textarea:focus-visible {
   font-weight: 450;
   cursor: pointer;
   box-shadow: none;
+  display: grid;
+  place-items: center;
+  padding: 0 0 2px;
 }
 
 .todo-list {
@@ -464,14 +472,17 @@ textarea:focus-visible {
   background: var(--primary);
   border-color: var(--primary);
   color: #fff;
+  display: grid;
+  place-items: center;
 }
 
 .todo-item.done .check-button::after {
   content: "✓";
   display: block;
   font-weight: 900;
-  font-size: 0.82rem;
-  line-height: 20px;
+  font-size: 0.78rem;
+  line-height: 1;
+  transform: translateY(-0.5px);
 }
 
 .todo-text {
@@ -701,8 +712,8 @@ textarea:focus-visible {
   position: absolute;
   left: 8px;
   top: 6px;
-  width: 7px;
-  height: 12px;
+  width: 5px;
+  height: 8px;
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: rotate(42deg);
@@ -711,9 +722,9 @@ textarea:focus-visible {
 .icon-memo::before {
   content: "";
   position: absolute;
-  left: 5px;
+  left: 4px;
   top: 3px;
-  width: 12px;
+  width: 11px;
   height: 16px;
   border: 2px solid currentColor;
   border-radius: 4px;
@@ -722,7 +733,7 @@ textarea:focus-visible {
 .icon-memo::after {
   content: "";
   position: absolute;
-  left: 8px;
+  left: 7px;
   top: 8px;
   width: 7px;
   height: 2px;
