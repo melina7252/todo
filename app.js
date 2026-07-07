@@ -15,8 +15,16 @@ const themes = [
   { id: "dark", name: "Dark", bg: "#151718", surface: "#252a2d", text: "#f0f3f2", muted: "#a4aba8", primary: "#7bb8ff", strong: "#a8d0ff" }
 ];
 
+const fontOptions = [
+  { id: "pretendard", name: "Pretendard", family: "\"Pretendard\"" },
+  { id: "bookk", name: "부크크 명조", family: "\"Bookk Myungjo\"" },
+  { id: "griun", name: "그리운 묘은또박", family: "\"Griun Myoeunddobak\"" },
+  { id: "kyobo", name: "교보 손글씨", family: "\"Kyobo Handwriting\"" }
+];
+
 const defaultSettings = {
   theme: "sage",
+  font: "pretendard",
   calendarMode: "week",
   weekStart: "monday",
   completePosition: "stay"
@@ -30,6 +38,8 @@ const state = {
   openTodoMenuId: null,
   draggedId: null,
   pointerDrag: null,
+  calendarSwipe: null,
+  suppressDateClick: false,
   editingTodo: null,
   memoSaveTimer: null
 };
@@ -65,6 +75,7 @@ const els = {
   cancelTodoEdit: document.getElementById("cancelTodoEdit"),
   confirmTodoEdit: document.getElementById("confirmTodoEdit"),
   themeGrid: document.getElementById("themeGrid"),
+  fontList: document.getElementById("fontList"),
   todoMenuTemplate: document.getElementById("todoMenuTemplate")
 };
 
@@ -73,7 +84,9 @@ document.addEventListener("DOMContentLoaded", init);
 async function init() {
   state.db = await openDb();
   applyTheme();
+  applyFont();
   renderThemeOptions();
+  renderFontOptions();
   bindEvents();
   await loadBanner();
   await loadTodosForSelectedDate();
@@ -109,6 +122,19 @@ function bindEvents() {
   els.calendarModeButton.addEventListener("click", toggleCalendarMode);
   els.previousPeriod.addEventListener("click", () => movePeriod(-1));
   els.nextPeriod.addEventListener("click", () => movePeriod(1));
+  [els.weekdayRow, els.dateGrid].forEach((element) => {
+    element.addEventListener("pointerdown", startCalendarSwipe);
+    element.addEventListener("pointermove", moveCalendarSwipe);
+    element.addEventListener("pointerup", finishCalendarSwipe);
+    element.addEventListener("pointercancel", cancelCalendarSwipe);
+  });
+  els.dateGrid.addEventListener("click", (event) => {
+    if (state.suppressDateClick) {
+      event.preventDefault();
+      event.stopPropagation();
+      state.suppressDateClick = false;
+    }
+  }, true);
   els.todoForm.addEventListener("submit", addTodo);
   els.todoInput.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && !event.isComposing) {
@@ -276,6 +302,55 @@ function movePeriod(direction) {
   });
 }
 
+function startCalendarSwipe(event) {
+  if (event.pointerType === "mouse" && event.button !== 0) return;
+  state.calendarSwipe = {
+    id: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    lastX: event.clientX,
+    lastY: event.clientY,
+    startedAt: performance.now(),
+    swiping: false
+  };
+}
+
+function moveCalendarSwipe(event) {
+  const swipe = state.calendarSwipe;
+  if (!swipe || swipe.id !== event.pointerId) return;
+  swipe.lastX = event.clientX;
+  swipe.lastY = event.clientY;
+  const dx = swipe.lastX - swipe.startX;
+  const dy = swipe.lastY - swipe.startY;
+  if (Math.abs(dx) > 18 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+    swipe.swiping = true;
+  }
+}
+
+function finishCalendarSwipe(event) {
+  const swipe = state.calendarSwipe;
+  if (!swipe || swipe.id !== event.pointerId) return;
+  const dx = event.clientX - swipe.startX;
+  const dy = event.clientY - swipe.startY;
+  const elapsed = Math.max(performance.now() - swipe.startedAt, 1);
+  const speed = Math.abs(dx) / elapsed;
+  const isSwipe = swipe.swiping && Math.abs(dx) >= 58 && Math.abs(dx) > Math.abs(dy) * 1.6 && speed >= 0.22;
+  state.calendarSwipe = null;
+  if (!isSwipe) return;
+
+  state.suppressDateClick = true;
+  window.setTimeout(() => {
+    state.suppressDateClick = false;
+  }, 0);
+  movePeriod(dx < 0 ? 1 : -1);
+}
+
+function cancelCalendarSwipe(event) {
+  if (state.calendarSwipe?.id === event.pointerId) {
+    state.calendarSwipe = null;
+  }
+}
+
 async function loadTodosForSelectedDate() {
   const dateKey = toDateKey(state.selectedDate);
   const all = await getAllFromIndex("todos", "date", dateKey);
@@ -438,7 +513,8 @@ function openEditTodoDialog(todo) {
   els.editTodoDialog.hidden = false;
   requestAnimationFrame(() => {
     els.editTodoInput.focus();
-    els.editTodoInput.select();
+    const end = els.editTodoInput.value.length;
+    els.editTodoInput.setSelectionRange(end, end);
   });
 }
 
@@ -612,9 +688,30 @@ function renderThemeOptions() {
   });
 }
 
+function renderFontOptions() {
+  els.fontList.innerHTML = "";
+  fontOptions.forEach((font) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "font-option";
+    button.textContent = font.name;
+    button.style.fontFamily = `${font.family}, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
+    button.addEventListener("click", () => {
+      state.settings.font = font.id;
+      saveSettings();
+      applyFont();
+      renderSettingsButtons();
+    });
+    els.fontList.appendChild(button);
+  });
+}
+
 function renderSettingsButtons() {
   document.querySelectorAll(".theme-option").forEach((button, index) => {
     button.classList.toggle("active", themes[index].id === state.settings.theme);
+  });
+  document.querySelectorAll(".font-option").forEach((button, index) => {
+    button.classList.toggle("active", fontOptions[index].id === state.settings.font);
   });
   document.querySelectorAll("[data-week-start]").forEach((button) => {
     button.classList.toggle("active", button.dataset.weekStart === state.settings.weekStart);
@@ -635,6 +732,11 @@ function applyTheme() {
   document.documentElement.style.setProperty("--primary", theme.primary);
   document.documentElement.style.setProperty("--primary-strong", theme.strong);
   document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.primary);
+}
+
+function applyFont() {
+  const font = fontOptions.find((item) => item.id === state.settings.font) || fontOptions[0];
+  document.documentElement.style.setProperty("--app-font", font.family);
 }
 
 function loadSettings() {

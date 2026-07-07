@@ -1,4 +1,4 @@
-const CACHE_NAME = "todo-memo-pwa-v10";
+const CACHE_NAME = "todo-memo-pwa-v13";
 const ASSETS = [
   "./",
   "./index.html",
@@ -6,7 +6,10 @@ const ASSETS = [
   "./app.js",
   "./manifest.webmanifest",
   "./icon.svg",
-  "./fonts/PretendardVariable.woff2"
+  "./fonts/PretendardVariable.woff2",
+  "./fonts/BookkMyungjo_Light.ttf",
+  "./fonts/Griun_Myoeunddobak-Rg.ttf",
+  "./fonts/KyoboHandwriting2025lyb.ttf"
 ];
 
 self.addEventListener("install", (event) => {
