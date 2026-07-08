@@ -3,27 +3,32 @@ const DB_VERSION = 1;
 const SETTINGS_KEY = "todoMemoSettings";
 
 const themes = [
-  { id: "sage", name: "Sage", bg: "#ffffff", surface: "#ffffff", text: "#202124", muted: "#7a7d82", primary: "#4f8f7b", strong: "#28725f" },
-  { id: "coral", name: "Coral", bg: "#fff7f4", surface: "#ffffff", text: "#2c2422", muted: "#7a6863", primary: "#e97864", strong: "#c65344" },
-  { id: "sky", name: "Sky", bg: "#f2f8fb", surface: "#ffffff", text: "#202832", muted: "#657383", primary: "#4b93c6", strong: "#276b9b" },
-  { id: "olive", name: "Olive", bg: "#f6f7ed", surface: "#ffffff", text: "#24281f", muted: "#6b715f", primary: "#839a45", strong: "#61752d" },
-  { id: "rose", name: "Rose", bg: "#fff5f8", surface: "#ffffff", text: "#2d2228", muted: "#806772", primary: "#d7638a", strong: "#ad3f68" },
-  { id: "indigo", name: "Indigo", bg: "#f5f6ff", surface: "#ffffff", text: "#232438", muted: "#686b84", primary: "#6976d9", strong: "#4350b7" },
-  { id: "strawberry", name: "Strawberry", bg: "#fff7fa", surface: "#ffffff", text: "#2d2328", muted: "#806b73", primary: "#f08daf", strong: "#d8628c" },
-  { id: "plum", name: "Plum", bg: "#fbf5fb", surface: "#ffffff", text: "#2b2330", muted: "#77677c", primary: "#9869b7", strong: "#704991" },
-  { id: "amber", name: "Amber", bg: "#fff8ea", surface: "#ffffff", text: "#2d281d", muted: "#756a54", primary: "#d4933b", strong: "#a96a1b" },
-  { id: "dark", name: "Dark", bg: "#151718", surface: "#252a2d", text: "#f0f3f2", muted: "#a4aba8", primary: "#7bb8ff", strong: "#a8d0ff" }
+  { id: "bold-blue", name: "Blue", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#5B7FA6", strong: "#426487" },
+  { id: "bold-green", name: "Green", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#6F9277", strong: "#55765F" },
+  { id: "bold-rose", name: "Rose", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#C9878C", strong: "#A86A70" },
+  { id: "bold-violet", name: "Violet", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#82749D", strong: "#6A5D83" },
+  { id: "bold-slate", name: "Slate", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#6B7888", strong: "#536171" },
+  { id: "cute-pink", name: "Pink", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#F0C7D0", strong: "#B8737E", soft: true },
+  { id: "cute-peach", name: "Peach", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#F1D0B5", strong: "#B9835D", soft: true },
+  { id: "cute-mint", name: "Mint", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#C8E4D4", strong: "#719B80", soft: true },
+  { id: "cute-sky", name: "Sky", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#C7DCEB", strong: "#6F94AD", soft: true },
+  { id: "cute-lavender", name: "Lavender", bg: "#ffffff", surface: "#ffffff", surfaceSoft: "#ffffff", text: "#1f2933", muted: "#747d88", primary: "#D8CBE7", strong: "#8B78A4", soft: true },
+  { id: "dark-black", name: "Black", bg: "#000000", surface: "#141414", text: "#f2f4f6", muted: "#a6adb5", primary: "#7F9DBF", strong: "#B5C7DC", dark: true },
+  { id: "dark-slate", name: "Slate", bg: "#151B23", surface: "#202936", text: "#f2f4f6", muted: "#a6adb5", primary: "#8F9DB5", strong: "#C2CAD8", dark: true },
+  { id: "dark-navy", name: "Navy", bg: "#101927", surface: "#182538", text: "#f2f4f6", muted: "#a6adb5", primary: "#7DAAC4", strong: "#B7D4E4", dark: true },
+  { id: "dark-forest", name: "Forest", bg: "#10221C", surface: "#1B3028", text: "#f2f4f6", muted: "#a6b5ad", primary: "#86B49B", strong: "#C1D9CB", dark: true },
+  { id: "dark-plum", name: "Plum", bg: "#1D1726", surface: "#2B2336", text: "#f2f4f6", muted: "#afa6ba", primary: "#A995BD", strong: "#D4C8E0", dark: true }
 ];
 
 const fontOptions = [
   { id: "pretendard", name: "Pretendard", family: "\"Pretendard\"" },
-  { id: "bookk", name: "부크크 명조", family: "\"Bookk Myungjo\"" },
+  { id: "bareun", name: "바른바탕체", family: "\"Bareun Batang\"" },
   { id: "griun", name: "그리운 묘은또박", family: "\"Griun Myoeunddobak\"" },
-  { id: "kyobo", name: "교보 손글씨", family: "\"Kyobo Handwriting\"" }
+  { id: "kcc", name: "KCC 임권택체", family: "\"KCC Imkwontaek\"" }
 ];
 
 const defaultSettings = {
-  theme: "sage",
+  theme: "bold-blue",
   font: "pretendard",
   calendarMode: "week",
   weekStart: "monday",
@@ -38,7 +43,9 @@ const state = {
   openTodoMenuId: null,
   draggedId: null,
   pointerDrag: null,
+  reorderPress: null,
   calendarSwipe: null,
+  scrollTouchY: 0,
   suppressDateClick: false,
   editingTodo: null,
   memoSaveTimer: null
@@ -46,6 +53,7 @@ const state = {
 
 const els = {
   body: document.body,
+  screen: document.querySelector(".screen"),
   banner: document.getElementById("banner"),
   bannerMenuButton: document.getElementById("bannerMenuButton"),
   bannerMenu: document.getElementById("bannerMenu"),
@@ -76,6 +84,9 @@ const els = {
   confirmTodoEdit: document.getElementById("confirmTodoEdit"),
   themeGrid: document.getElementById("themeGrid"),
   fontList: document.getElementById("fontList"),
+  exportBackupButton: document.getElementById("exportBackupButton"),
+  importBackupButton: document.getElementById("importBackupButton"),
+  backupFileInput: document.getElementById("backupFileInput"),
   todoMenuTemplate: document.getElementById("todoMenuTemplate")
 };
 
@@ -99,6 +110,9 @@ function bindEvents() {
   document.querySelectorAll(".tab-button").forEach((button) => {
     button.addEventListener("click", () => switchTab(button.dataset.tab));
   });
+
+  els.screen.addEventListener("touchstart", handleScrollBoundaryStart, { passive: true });
+  els.screen.addEventListener("touchmove", handleScrollBoundaryMove, { passive: false });
 
   els.bannerMenuButton.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -151,6 +165,9 @@ function bindEvents() {
   els.confirmMemoClear.addEventListener("click", clearMemo);
   els.memoText.addEventListener("input", scheduleMemoSave);
   els.memoText.addEventListener("blur", flushMemoSave);
+  els.exportBackupButton.addEventListener("click", exportTodoMemoBackup);
+  els.importBackupButton.addEventListener("click", () => els.backupFileInput.click());
+  els.backupFileInput.addEventListener("change", importTodoMemoBackup);
   window.addEventListener("beforeunload", flushMemoSave);
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
@@ -206,6 +223,42 @@ function renderAll() {
   renderCalendar();
   renderTodoList();
   renderSettingsButtons();
+}
+
+function handleScrollBoundaryStart(event) {
+  if (event.touches.length !== 1) return;
+  state.scrollTouchY = event.touches[0].clientY;
+}
+
+function handleScrollBoundaryMove(event) {
+  if (event.touches.length !== 1) return;
+  const currentY = event.touches[0].clientY;
+  const deltaY = currentY - state.scrollTouchY;
+  state.scrollTouchY = currentY;
+  const scroller = getBoundaryScroller(event.target);
+  const maxScroll = scroller.scrollHeight - scroller.clientHeight;
+
+  if (maxScroll <= 0) {
+    event.preventDefault();
+    return;
+  }
+
+  if ((scroller.scrollTop <= 0 && deltaY > 0) || (scroller.scrollTop >= maxScroll - 1 && deltaY < 0)) {
+    event.preventDefault();
+  }
+}
+
+function getBoundaryScroller(target) {
+  let node = target;
+  while (node && node !== els.screen) {
+    if (node instanceof HTMLElement) {
+      const style = window.getComputedStyle(node);
+      const canScroll = /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight;
+      if (canScroll) return node;
+    }
+    node = node.parentElement;
+  }
+  return els.screen;
 }
 
 function renderCalendar() {
@@ -413,7 +466,7 @@ function renderTodoList() {
     item.className = "todo-item";
     item.classList.toggle("done", todo.done);
     item.classList.toggle("cancelled", todo.cancelled);
-    item.draggable = true;
+    item.draggable = false;
     item.dataset.id = todo.id;
 
     const check = document.createElement("button");
@@ -431,7 +484,7 @@ function renderTodoList() {
     drag.type = "button";
     drag.textContent = "≡";
     drag.setAttribute("aria-label", "순서 변경");
-    drag.addEventListener("pointerdown", (event) => startPointerReorder(event, item));
+    drag.addEventListener("pointerdown", (event) => startPointerReorder(event, item, drag));
 
     const menu = document.createElement("button");
     menu.className = "menu-dot-button";
@@ -442,11 +495,6 @@ function renderTodoList() {
       event.stopPropagation();
       openTodoMenu(item, todo);
     });
-
-    item.addEventListener("dragstart", handleDragStart);
-    item.addEventListener("dragover", handleDragOver);
-    item.addEventListener("drop", handleDrop);
-    item.addEventListener("dragend", handleDragEnd);
 
     item.append(check, text, drag, menu);
     els.todoList.appendChild(item);
@@ -570,21 +618,40 @@ function handleDragEnd(event) {
   state.draggedId = null;
 }
 
-function startPointerReorder(event, item) {
+function startPointerReorder(event, item, handle) {
   if (event.button !== 0) return;
-  event.preventDefault();
   closeTodoMenus();
-  state.pointerDrag = { item, id: item.dataset.id };
-  item.classList.add("dragging");
-  item.setPointerCapture?.(event.pointerId);
-  document.addEventListener("pointermove", movePointerReorder);
+  cancelPointerReorder({ rerender: false });
+  state.reorderPress = {
+    item,
+    handle,
+    id: item.dataset.id,
+    pointerId: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    timer: window.setTimeout(() => activatePointerReorder(), 360)
+  };
+  document.addEventListener("pointermove", movePointerReorder, { passive: false });
   document.addEventListener("pointerup", finishPointerReorder, { once: true });
   document.addEventListener("pointercancel", cancelPointerReorder, { once: true });
 }
 
 function movePointerReorder(event) {
+  const pressState = state.reorderPress;
+  if (pressState) {
+    if (pressState.pointerId !== event.pointerId) return;
+    const dx = event.clientX - pressState.startX;
+    const dy = event.clientY - pressState.startY;
+    if (Math.hypot(dx, dy) > 10) {
+      cancelPointerReorder({ rerender: false });
+    }
+    return;
+  }
+
   const dragState = state.pointerDrag;
   if (!dragState) return;
+  if (dragState.pointerId !== event.pointerId) return;
+  event.preventDefault();
   const target = document.elementFromPoint(event.clientX, event.clientY)?.closest(".todo-item");
   if (!target || target === dragState.item || !els.todoList.contains(target)) return;
   const rect = target.getBoundingClientRect();
@@ -592,26 +659,65 @@ function movePointerReorder(event) {
   els.todoList.insertBefore(dragState.item, after ? target.nextSibling : target);
 }
 
+function activatePointerReorder() {
+  const pressState = state.reorderPress;
+  if (!pressState) return;
+  window.clearTimeout(pressState.timer);
+  state.reorderPress = null;
+  state.pointerDrag = {
+    item: pressState.item,
+    handle: pressState.handle,
+    id: pressState.id,
+    pointerId: pressState.pointerId
+  };
+  pressState.item.classList.add("dragging", "reorder-ready");
+}
+
 async function finishPointerReorder() {
+  if (state.reorderPress) {
+    clearReorderPress();
+    removePointerReorderListeners();
+    return;
+  }
+
   const dragState = state.pointerDrag;
-  if (!dragState) return;
-  dragState.item.classList.remove("dragging");
+  if (!dragState) {
+    removePointerReorderListeners();
+    return;
+  }
+  dragState.item.classList.remove("dragging", "reorder-ready");
   const ids = [...els.todoList.querySelectorAll(".todo-item")].map((item) => item.dataset.id);
   state.pointerDrag = null;
-  document.removeEventListener("pointermove", movePointerReorder);
+  removePointerReorderListeners();
   await persistTodoOrder(ids);
   await loadTodosForSelectedDate();
   renderTodoList();
 }
 
-function cancelPointerReorder() {
+function cancelPointerReorder(options = {}) {
+  const shouldRender = options.rerender !== false;
+  clearReorderPress();
   const dragState = state.pointerDrag;
   if (dragState) {
-    dragState.item.classList.remove("dragging");
+    dragState.item.classList.remove("dragging", "reorder-ready");
   }
   state.pointerDrag = null;
+  removePointerReorderListeners();
+  if (shouldRender && state.db) {
+    renderTodoList();
+  }
+}
+
+function clearReorderPress() {
+  if (!state.reorderPress) return;
+  window.clearTimeout(state.reorderPress.timer);
+  state.reorderPress = null;
+}
+
+function removePointerReorderListeners() {
   document.removeEventListener("pointermove", movePointerReorder);
-  renderTodoList();
+  document.removeEventListener("pointerup", finishPointerReorder);
+  document.removeEventListener("pointercancel", cancelPointerReorder);
 }
 
 async function persistTodoOrder(ids) {
@@ -639,14 +745,82 @@ function scheduleMemoSave() {
 function flushMemoSave() {
   window.clearTimeout(state.memoSaveTimer);
   if (state.db) {
-    putRecord("memo", { id: "main", text: els.memoText.value, updatedAt: Date.now() });
+    return putRecord("memo", { id: "main", text: els.memoText.value, updatedAt: Date.now() });
   }
+  return Promise.resolve();
 }
 
 async function clearMemo() {
   els.memoText.value = "";
   await putRecord("memo", { id: "main", text: "", updatedAt: Date.now() });
   els.confirmDialog.hidden = true;
+}
+
+async function exportTodoMemoBackup() {
+  await flushMemoSave();
+  const todos = await getAllRecords("todos");
+  const memo = await getRecord("memo", "main");
+  const backup = {
+    type: "todo-memo-backup",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    todos,
+    memo: {
+      text: memo?.text || "",
+      updatedAt: memo?.updatedAt || Date.now()
+    }
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `todo-memo-backup-${toDateKey(new Date())}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+async function importTodoMemoBackup(event) {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  try {
+    const backup = JSON.parse(await file.text());
+    const todos = normalizeBackupTodos(backup.todos);
+    const memoText = typeof backup.memo?.text === "string" ? backup.memo.text : "";
+    const confirmed = window.confirm("백업 파일의 투두와 메모로 현재 내용을 바꿀까요?");
+    if (!confirmed) return;
+
+    await clearStore("todos");
+    await Promise.all(todos.map((todo) => putRecord("todos", todo)));
+    await putRecord("memo", { id: "main", text: memoText, updatedAt: Date.now() });
+    await loadTodosForSelectedDate();
+    await loadMemo();
+    renderAll();
+  } catch {
+    window.alert("백업 파일을 불러오지 못했어요.");
+  } finally {
+    event.target.value = "";
+  }
+}
+
+function normalizeBackupTodos(todos) {
+  if (!Array.isArray(todos)) {
+    throw new Error("Invalid backup");
+  }
+  return todos
+    .map((todo, index) => ({
+      id: typeof todo.id === "string" && todo.id ? todo.id : crypto.randomUUID(),
+      date: typeof todo.date === "string" ? todo.date : "",
+      text: typeof todo.text === "string" ? todo.text.trim() : "",
+      done: Boolean(todo.done),
+      cancelled: Boolean(todo.cancelled),
+      order: Number.isFinite(Number(todo.order)) ? Number(todo.order) : index + 1,
+      createdAt: Number.isFinite(Number(todo.createdAt)) ? Number(todo.createdAt) : Date.now(),
+      updatedAt: Number.isFinite(Number(todo.updatedAt)) ? Number(todo.updatedAt) : Date.now()
+    }))
+    .filter((todo) => /^\d{4}-\d{2}-\d{2}$/.test(todo.date) && todo.text);
 }
 
 async function handleBannerFile(event) {
@@ -677,7 +851,9 @@ function renderThemeOptions() {
     button.type = "button";
     button.className = "theme-option";
     button.title = theme.name;
-    button.style.setProperty("--swatch", `linear-gradient(135deg, ${theme.primary}, ${theme.strong})`);
+    button.style.setProperty("--swatch", theme.dark
+      ? `linear-gradient(135deg, ${theme.bg}, ${theme.surface} 52%, ${theme.primary})`
+      : `linear-gradient(135deg, ${theme.primary}, ${theme.strong})`);
     button.addEventListener("click", () => {
       state.settings.theme = theme.id;
       saveSettings();
@@ -723,15 +899,28 @@ function renderSettingsButtons() {
 
 function applyTheme() {
   const theme = themes.find((item) => item.id === state.settings.theme) || themes[0];
-  document.body.classList.toggle("theme-dark", theme.id === "dark");
+  const isDark = Boolean(theme.dark);
+  const isSoft = Boolean(theme.soft);
+  document.body.classList.toggle("theme-dark", isDark);
   document.documentElement.style.setProperty("--bg", theme.bg);
-  document.documentElement.style.setProperty("--surface", theme.id === "dark" ? "#1d2422" : "#f6f7f6");
+  document.documentElement.style.setProperty("--surface", theme.surfaceSoft || (isDark ? theme.surface : "#f6f7f6"));
   document.documentElement.style.setProperty("--surface-strong", theme.surface);
   document.documentElement.style.setProperty("--text", theme.text);
   document.documentElement.style.setProperty("--muted", theme.muted);
+  document.documentElement.style.setProperty("--line", isDark ? "rgba(244, 244, 244, 0.13)" : "rgba(32, 33, 36, 0.11)");
   document.documentElement.style.setProperty("--primary", theme.primary);
   document.documentElement.style.setProperty("--primary-strong", theme.strong);
-  document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.primary);
+  document.documentElement.style.setProperty("--primary-soft", isDark ? `color-mix(in srgb, ${theme.primary} 20%, transparent)` : `color-mix(in srgb, ${theme.primary} 18%, transparent)`);
+  document.documentElement.style.setProperty("--control-fill", isDark
+    ? `color-mix(in srgb, ${theme.primary} 24%, ${theme.surface})`
+    : isSoft ? `color-mix(in srgb, ${theme.primary} 44%, white)` : theme.strong);
+  document.documentElement.style.setProperty("--control-text", isDark ? theme.strong : isSoft ? theme.strong : "#fff");
+  document.documentElement.style.setProperty("--control-border", isDark
+    ? `color-mix(in srgb, ${theme.primary} 46%, ${theme.surface})`
+    : isSoft ? `color-mix(in srgb, ${theme.primary} 68%, white)` : theme.strong);
+  document.documentElement.style.setProperty("--shadow", isDark ? "0 18px 44px rgba(0, 0, 0, 0.34)" : "0 12px 32px rgba(30, 41, 35, 0.1)");
+  document.documentElement.style.setProperty("--small-shadow", isDark ? "0 8px 24px rgba(0, 0, 0, 0.2)" : "0 4px 14px rgba(30, 41, 35, 0.06)");
+  document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark ? theme.bg : theme.primary);
 }
 
 function applyFont() {
@@ -741,10 +930,47 @@ function applyFont() {
 
 function loadSettings() {
   try {
-    return { ...defaultSettings, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") };
+    return normalizeSettings(JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"));
   } catch {
     return { ...defaultSettings };
   }
+}
+
+function normalizeSettings(settings) {
+  const next = { ...defaultSettings, ...settings };
+  if (next.font === "bookk") next.font = "bareun";
+  if (next.font === "kyobo") next.font = "kcc";
+  const themeMap = {
+    sage: "bold-green",
+    coral: "bold-rose",
+    sky: "bold-blue",
+    olive: "bold-green",
+    rose: "cute-pink",
+    indigo: "bold-violet",
+    strawberry: "cute-pink",
+    plum: "dark-plum",
+    amber: "cute-peach",
+    dark: "dark-slate",
+    "deep-blue": "bold-blue",
+    "deep-green": "bold-green",
+    "deep-coral": "bold-rose",
+    "deep-slate": "bold-slate",
+    "deep-taupe": "bold-slate",
+    "soft-mint": "cute-mint",
+    "soft-pink": "cute-pink",
+    "soft-sand": "cute-peach",
+    "soft-gray": "bold-slate",
+    "soft-leaf": "cute-mint",
+    "dark-charcoal": "dark-slate",
+    "dark-brown": "dark-forest"
+  };
+  if (themeMap[next.theme]) {
+    next.theme = themeMap[next.theme];
+  }
+  if (!themes.some((theme) => theme.id === next.theme)) {
+    next.theme = defaultSettings.theme;
+  }
+  return next;
 }
 
 function saveSettings() {
@@ -784,8 +1010,16 @@ function getRecord(storeName, key) {
   return requestToPromise(transaction(storeName).get(key));
 }
 
+function getAllRecords(storeName) {
+  return requestToPromise(transaction(storeName).getAll());
+}
+
 function deleteRecord(storeName, key) {
   return requestToPromise(transaction(storeName, "readwrite").delete(key));
+}
+
+function clearStore(storeName) {
+  return requestToPromise(transaction(storeName, "readwrite").clear());
 }
 
 function getAllFromIndex(storeName, indexName, key) {

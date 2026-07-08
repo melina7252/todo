@@ -7,9 +7,9 @@
 }
 
 @font-face {
-  font-family: "Bookk Myungjo";
-  src: url("./fonts/BookkMyungjo_Light.ttf") format("truetype");
-  font-weight: 300;
+  font-family: "Bareun Batang";
+  src: url("./fonts/BareunBatangM.ttf") format("truetype");
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -23,8 +23,8 @@
 }
 
 @font-face {
-  font-family: "Kyobo Handwriting";
-  src: url("./fonts/KyoboHandwriting2025lyb.ttf") format("truetype");
+  font-family: "KCC Imkwontaek";
+  src: url("./fonts/KCCImkwontaek.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -33,14 +33,17 @@
 :root {
   color-scheme: light;
   --bg: #ffffff;
-  --surface: #f6f7f6;
+  --surface: #ffffff;
   --surface-strong: #ffffff;
-  --text: #202124;
-  --muted: #7a7d82;
+  --text: #1f2933;
+  --muted: #747d88;
   --line: rgba(32, 33, 36, 0.11);
-  --primary: #4f8f7b;
-  --primary-strong: #28725f;
-  --primary-soft: rgba(79, 143, 123, 0.1);
+  --primary: #5b7fa6;
+  --primary-strong: #426487;
+  --primary-soft: rgba(91, 127, 166, 0.14);
+  --control-fill: #426487;
+  --control-text: #ffffff;
+  --control-border: #426487;
   --danger: #c95656;
   --shadow: 0 12px 32px rgba(30, 41, 35, 0.1);
   --small-shadow: 0 4px 14px rgba(30, 41, 35, 0.06);
@@ -53,7 +56,11 @@
 
 html,
 body {
+  width: 100%;
+  height: 100%;
   min-height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
   touch-action: manipulation;
 }
 
@@ -88,17 +95,20 @@ textarea:focus-visible {
 
 .app-shell {
   width: min(100%, 540px);
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
   background: var(--bg);
   position: relative;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .screen {
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
   padding-bottom: calc(88px + var(--safe-bottom));
 }
 
@@ -385,8 +395,8 @@ textarea:focus-visible {
 }
 
 .date-cell.selected {
-  background: var(--primary);
-  color: #fff;
+  background: var(--control-fill);
+  color: var(--control-text);
   box-shadow: none;
 }
 
@@ -429,8 +439,8 @@ textarea:focus-visible {
   height: 44px;
   border: 0;
   border-radius: 999px;
-  background: var(--primary);
-  color: #fff;
+  background: var(--control-fill);
+  color: var(--control-text);
   font-size: 1.52rem;
   line-height: 1;
   font-weight: 450;
@@ -484,6 +494,10 @@ textarea:focus-visible {
   transform: scale(0.985);
 }
 
+.todo-item.reorder-ready {
+  background: var(--primary-soft);
+}
+
 .check-button {
   width: 24px;
   height: 24px;
@@ -495,9 +509,9 @@ textarea:focus-visible {
 }
 
 .todo-item.done .check-button {
-  background: var(--primary);
-  border-color: var(--primary);
-  color: #fff;
+  background: var(--control-fill);
+  border-color: var(--control-border);
+  color: var(--control-text);
   display: grid;
   place-items: center;
 }
@@ -533,7 +547,6 @@ textarea:focus-visible {
   background: transparent;
   color: var(--muted);
   cursor: grab;
-  touch-action: none;
   user-select: none;
   font-weight: 600;
   display: grid;
@@ -543,11 +556,13 @@ textarea:focus-visible {
 
 .drag-button {
   font-size: 1.05rem;
+  touch-action: pan-y;
 }
 
 .menu-dot-button {
   cursor: pointer;
   font-size: 1.2rem;
+  touch-action: manipulation;
 }
 
 .drag-button:active,
@@ -638,7 +653,10 @@ textarea:focus-visible {
 }
 
 .theme-option.active {
-  border-color: var(--text);
+  border-color: var(--primary-strong);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.32),
+    0 0 0 3px var(--primary-soft);
 }
 
 .theme-option.active::after {
@@ -650,8 +668,8 @@ textarea:focus-visible {
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: var(--surface-strong);
-  color: var(--text);
+  background: var(--primary-strong);
+  color: #fff;
   font-weight: 650;
   font-size: 0.82rem;
 }
@@ -689,7 +707,7 @@ textarea:focus-visible {
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--primary);
+  background: var(--primary-strong);
   color: #fff;
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 0.76rem;
@@ -722,6 +740,27 @@ textarea:focus-visible {
   background: var(--surface-strong);
   color: var(--primary-strong);
   box-shadow: var(--small-shadow);
+}
+
+.backup-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.backup-button {
+  min-height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 560;
+  cursor: pointer;
+}
+
+.backup-button:active {
+  background: var(--primary-soft);
+  color: var(--primary-strong);
 }
 
 .bottom-tabs {
@@ -895,9 +934,9 @@ textarea:focus-visible {
 }
 
 .dialog-actions .primary-fill {
-  border-color: var(--primary);
-  background: var(--primary);
-  color: #fff;
+  border-color: var(--control-border);
+  background: var(--control-fill);
+  color: var(--control-text);
 }
 
 [hidden] {
@@ -906,17 +945,6 @@ textarea:focus-visible {
 
 body.theme-dark {
   color-scheme: dark;
-  --bg: #131817;
-  --surface: #1d2422;
-  --surface-strong: #232b29;
-  --text: #eef4f1;
-  --muted: #9da9a4;
-  --line: rgba(238, 244, 241, 0.12);
-  --primary: #76b7ff;
-  --primary-strong: #add5ff;
-  --primary-soft: rgba(118, 183, 255, 0.16);
-  --shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
-  --small-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 @media (min-width: 700px) {
@@ -926,10 +954,6 @@ body.theme-dark {
 
   .app-shell {
     box-shadow: 0 0 0 1px var(--line);
-  }
-
-  .screen {
-    min-height: 100vh;
   }
 
   .banner {

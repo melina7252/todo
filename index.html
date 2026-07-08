@@ -96,6 +96,15 @@
               <button type="button" data-complete-position="bottom">완료하면 아래로 이동</button>
             </div>
           </section>
+
+          <section class="setting-group">
+            <h2>백업</h2>
+            <div class="backup-actions">
+              <button class="backup-button" id="exportBackupButton" type="button">투두/메모 저장</button>
+              <button class="backup-button" id="importBackupButton" type="button">백업 불러오기</button>
+            </div>
+            <input id="backupFileInput" type="file" accept="application/json,.json" hidden />
+          </section>
         </section>
       </main>
 
